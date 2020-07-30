@@ -7,6 +7,7 @@ The offsets are accurate as of 30/7/20 and all cheats work as intended.
 - Bunnyhop - press Space to automatically jump and gain acceleration
 - Triggerbot - hold Mouse4 to automatically shoot when your crosshair is on an enemy
 - GlowESP - enemies are automatically highlighted through walls
+- NoFlash - removes flash
 
 ## Updating Offsets
 
