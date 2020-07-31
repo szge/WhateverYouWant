@@ -143,6 +143,7 @@
     <ClCompile Include="src\memory_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\csgo.hpp" />
     <ClInclude Include="src\memory_manager.h" />
   </ItemGroup>
   <ItemGroup>

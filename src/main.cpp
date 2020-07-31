@@ -1,7 +1,10 @@
 #include "memory_manager.h"
+#include "csgo.hpp"
 #include <iostream>
 #include <ctime>
 #include <thread>
+
+using namespace hazedumper;
 
 int main()
 {
@@ -37,7 +40,7 @@ int main()
     while (true) {
         DWORD dwLocalPlayer = 0;
         // set offset: dwLocalPlayer
-        MemoryManager->Read<DWORD>(dwClientBase + 0xD3EC6C, dwLocalPlayer);
+        MemoryManager->Read<DWORD>(dwClientBase + signatures::dwLocalPlayer, dwLocalPlayer);
 
         
         /*
@@ -47,12 +50,12 @@ int main()
         if (GetAsyncKeyState(VK_SPACE)) {
             BYTE fFlags = 0; // bitfield
             // set offset: fFlags
-            MemoryManager->Read<BYTE>(dwLocalPlayer + 0x104, fFlags);
+            MemoryManager->Read<BYTE>(dwLocalPlayer + netvars::m_fFlags, fFlags);
             // check for FL_ONGROUND
             if (fFlags & (1 << 0)) {
                 // jump for one tick
                 // set offset: dwForceJump
-                MemoryManager->Write(dwClientBase + 0x51FD20C, 6);
+                MemoryManager->Write(dwClientBase + signatures::dwForceJump, 6);
             }
         }
 
@@ -63,19 +66,20 @@ int main()
         if (GetAsyncKeyState(VK_XBUTTON1)) {
             int iCrosshairId;
             // set offset: iCrosshairId
-            MemoryManager->Read<int>(dwLocalPlayer + 0xB3E4, iCrosshairId);
+            MemoryManager->Read<int>(dwLocalPlayer + netvars::m_iCrosshairId, iCrosshairId);
 
             if (iCrosshairId > 0 && iCrosshairId <= 65) {
                 DWORD entity;
                 // set offset: dwEntityList
-                MemoryManager->Read<DWORD>(dwClientBase + 0x4D534EC + 0x10 * iCrosshairId, entity);
-                int iTeamNum;
-                MemoryManager->Read<int>(entity + 0xF4, iTeamNum);
-                int playerTeamNum;
-                MemoryManager->Read<int>(dwLocalPlayer + 0xF4, playerTeamNum);
-                if (playerTeamNum != iTeamNum) {
+                MemoryManager->Read<DWORD>(dwClientBase + signatures::dwEntityList + 0x10 * iCrosshairId, entity);
+                int iTeamNum; // local player's team num
+                // set offset: iTeamNum
+                MemoryManager->Read<int>(entity + netvars::m_iTeamNum, iTeamNum);
+                int playerTeamNum; // entity's team num
+                MemoryManager->Read<int>(dwLocalPlayer + netvars::m_iTeamNum, playerTeamNum);
+                if (playerTeamNum != iTeamNum) { // check if entity is on enemy team
                     // set offset: dwForceAttack
-                    MemoryManager->Write(dwClientBase + 0x3184A80, 6);
+                    MemoryManager->Write(dwClientBase + signatures::dwForceAttack, 6);
                 }
             }
         }
@@ -89,23 +93,23 @@ int main()
         DWORD entity;
         int iTeamNum;
         int playerTeamNum;
-        MemoryManager->Read<int>(dwLocalPlayer + 0xF4, playerTeamNum);
+        MemoryManager->Read<int>(dwLocalPlayer + netvars::m_iTeamNum, playerTeamNum);
         int dwGlowObjectManager;
         // set offset: dwGlowObjectManager
-        MemoryManager->Read<int>(dwClientBase + 0x529B3C8, dwGlowObjectManager);
+        MemoryManager->Read<int>(dwClientBase + signatures::dwGlowObjectManager, dwGlowObjectManager);
         for (int id = 1; id <= 64; id++) {
             // set offset: dwEntityList
-            MemoryManager->Read<DWORD>(dwClientBase + 0x4D534EC + 0x10 * id, entity);
-            MemoryManager->Read<int>(entity + 0xF4, iTeamNum);
+            MemoryManager->Read<DWORD>(dwClientBase + signatures::dwEntityList + 0x10 * id, entity);
+            MemoryManager->Read<int>(entity + netvars::m_iTeamNum, iTeamNum);
             if ((iTeamNum == 2 || iTeamNum == 3) && iTeamNum != playerTeamNum) {
                 int iHealth;
                 // set offset: iHealth
-                MemoryManager->Read<int>(entity + 0x100, iHealth);
+                MemoryManager->Read<int>(entity + netvars::m_iHealth, iHealth);
                 float iHealthPercent = iHealth / 100.f;
 
                 int iGlowIndex;
                 // set offset: iGlowIndex
-                MemoryManager->Read<int>(entity + 0xA438, iGlowIndex);
+                MemoryManager->Read<int>(entity + netvars::m_iGlowIndex, iGlowIndex);
 
                 // set size of a glow object
                 int iGlowIndexOffset = iGlowIndex * 0x38;
@@ -129,13 +133,14 @@ int main()
 
         float flFlashDuration;
         // set offset: flFlashDuration
-        MemoryManager->Read(dwClientBase + 0xA420, flFlashDuration);
+        MemoryManager->Read(dwClientBase + netvars::m_flFlashDuration, flFlashDuration);
         if (flFlashDuration > 0.f) {
             std::cout << "flash duration: " << flFlashDuration;
-            MemoryManager->Write(dwClientBase + 0xA420, 0.f);
+            // change flash duration to zero
+            MemoryManager->Write(dwClientBase + netvars::m_flFlashDuration, 0.f);
         }
 
-
+        // save cpu time before running next tick
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
