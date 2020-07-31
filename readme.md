@@ -1,6 +1,6 @@
 # WhateverYouWant (WYW) CS:GO cheat
 
-A cheat for the video game Counter-Strike: Global Offensive. It has never tested on VAC-secure servers and is probably not safe for use.
+A cheat for the video game Counter-Strike: Global Offensive. It has never been tested on VAC-secured servers and is probably not safe to use in VAC-secured servers.
 Named WhateverYouWant since when I asked my friend what to name the cheat, he replied with "whatever you want".
 The offsets are accurate as of 30/7/20 and all cheats work as intended.
 
