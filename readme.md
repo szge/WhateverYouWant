@@ -1,8 +1,13 @@
 # WhateverYouWant (WYW) CS:GO cheat
 
-A cheat for the video game Counter-Strike: Global Offensive. It has never been tested on VAC-secured servers and is probably not safe to use in VAC-secured servers.
+A cheat for the video game Counter-Strike: Global Offensive.
 Named WhateverYouWant since when I asked my friend what to name the cheat, he replied with "whatever you want".
 The offsets are accurate as of 30/7/20 and all cheats work as intended.
+
+## WARNING AND DISCLAIMER
+It has never been tested on VAC-secured servers and is probably not safe to use in VAC-secured servers.
+Do not use this on VAC-secured servers. My cheat has absolutely no anti-cheat circumvention.
+If you get banned using this, that is completely your fault.
 
 ## Features
 - Bunnyhop - press Space to automatically jump and gain acceleration
