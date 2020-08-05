@@ -139,10 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\cheats.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\memory_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\cheats.h" />
     <ClInclude Include="src\csgo.hpp" />
     <ClInclude Include="src\memory_manager.h" />
   </ItemGroup>
